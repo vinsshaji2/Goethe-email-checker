@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Checker</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f3f6fb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.4s ease;
+        }
+
+        #result.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .found { color: #16a34a; }
+        .notfound { color: #dc2626; }
+    </style>
+</head>
+
+<body>
+<div class="box">
+    <h2>Email Checker</h2>
+    <input id="email" type="email" placeholder="Enter email" />
+    <button onclick="check()">Check</button>
+    <div id="result"></div>
+</div>
+
+<script>
+async function check() {
+    const email = document.getElementById("email").value;
+    const result = document.getElementById("result");
+
+    result.classList.remove("show");
+    result.innerHTML = "Checking...";
+
+    const res = await fetch("/api/check_email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+
+    setTimeout(() => {
+        if (data.found) {
+            result.innerHTML = "✅ Email Found";
+            result.className = "found show";
+        } else {
+            result.innerHTML = "❌ Email Not Found";
+            result.className = "notfound show";
+        }
+    }, 300);
+}
+</script>
+</body>
+</html>
