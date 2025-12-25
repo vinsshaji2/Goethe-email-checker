@@ -78,7 +78,7 @@ async function check() {
     result.classList.remove("show");
     result.innerHTML = "Checking...";
 
-    const res = await fetch("/api/check_email", {
+    const res = await fetch("check_email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email })
